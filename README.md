@@ -23,7 +23,7 @@ $vk = new \BW\Vkontakte(array(
   "redirect_uri" => "http://your_redirect_uri",
 ));
 
-// Get User ID
+// Get User info
 $user = $vk->api('users.get', array(
   "fields" => array(
     "domain",
