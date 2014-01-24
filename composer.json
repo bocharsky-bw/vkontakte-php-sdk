@@ -1,0 +1,22 @@
+{
+    "name": "bocharsky-bw/vkontakte-php-sdk",
+    "description": "Vkontakte PHP SDK",
+    "keywords": ["vkontakte", "sdk"],
+    "type": "library",
+    "homepage": "https://github.com/bocharsky-bw/vkontakte-php-sdk",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bocharsky Victor",
+            "homepage": "https://github.com/bocharsky-bw/vkontakte-php-sdk/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "classmap": ["src"]
+    }
+}
