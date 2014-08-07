@@ -264,9 +264,10 @@ class Vkontakte {
             } else {
                 $q .= urlencode($value);
             }
-        }
-        if ($q) {
-            $q .= '&'; // Add "&" sign for access_token if query exists
+            
+            if ($q) {
+                $q .= '&'; // Add "&" sign for access_token if query exists
+            }
         }
         $url = 'https://api.vk.com/method/'. $method .'?' .$q. 'access_token='. $this->accessToken->access_token;
         $result = json_decode($this->curl($url));
