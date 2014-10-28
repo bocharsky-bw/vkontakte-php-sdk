@@ -209,8 +209,12 @@ class Vkontakte {
      * @param string $code
      * @return \Vkontakte
      */
-    public function authenticate($code = NULL) {
-        $code = $code ? $code : $_GET['code'];
+    public function authenticate($code = null) {
+        if (null === $code) {
+            if (isset($_GET['code'])) {
+                $code = $_GET['code'];
+            }
+        }
         
         $url = 'https://oauth.vk.com/access_token'
                 .'?client_id='. urlencode($this->getAppId())
