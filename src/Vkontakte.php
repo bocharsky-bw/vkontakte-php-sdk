@@ -9,7 +9,7 @@ namespace BW;
  */
 class Vkontakte {
     
-    const VERSION = '5.5';
+    const VERSION = '5.25';
 
     /**
      * The application ID
@@ -256,23 +256,16 @@ class Vkontakte {
      */
     public function api($method, array $query = array()) {
         /* Generate query string from array */
-        $q = '';
         foreach ($query as $param => $value) {
-            $q .= $param .'=';
             if (is_array($value)) {
-                $q .= urlencode(implode(',', $value));
-            } else {
-                $q .= urlencode($value);
+                $query[$param] = implode(',', $value);
             }
         }
-        if ($q) {
-            $q .= '&'; // Add "&" sign for access_token if query exists
-        }
-        $url = 'https://api.vk.com/method/'. $method .'?' .$q. 'access_token='. $this->accessToken->access_token;
+        $query['access_token'] = $this->accessToken->access_token;
+        $url = 'https://api.vk.com/method/' . $method . '?' . http_build_query($query);
         $result = json_decode($this->curl($url));
         
         if (isset($result->response)) {
-            
             return $result->response;
         }
         
