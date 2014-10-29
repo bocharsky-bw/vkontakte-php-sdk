@@ -9,19 +9,22 @@ namespace BW;
  */
 class Vkontakte
 {
-    const VERSION = '5.25';
+    /**
+     * The API version used in queries
+     */
+    const API_VERSION = '5.25';
 
     /**
-     * The application ID
+     * The client ID (app ID)
      * @var string
      */
-    private $appId;
+    private $clientId;
     
     /**
-     * The application secret key
+     * The client secret key
      * @var string
      */
-    private $secretKey;
+    private $clientSecret;
     
     /**
      * The scope for login URL
@@ -54,14 +57,14 @@ class Vkontakte
      */
     public function __construct(array $config = array())
     {
-        if (isset($config['app_id'])) {
-            $this->setAppId($config['app_id']);
+        if (isset($config['client_id'])) {
+            $this->setClientId($config['client_id']);
         }
-        if (isset($config['secret_key'])) {
-            $this->setSecretKey($config['secret_key']);
+        if (isset($config['client_secret'])) {
+            $this->setClientSecret($config['client_secret']);
         }
-        if (isset($config['scopes'])) {
-            $this->setScope($config['scopes']);
+        if (isset($config['scope'])) {
+            $this->setScope($config['scope']);
         }
         if (isset($config['redirect_uri'])) {
             $this->setRedirectUri($config['redirect_uri']);
@@ -90,11 +93,11 @@ class Vkontakte
     public function getLoginUrl()
     {
         return 'https://oauth.vk.com/authorize?' . http_build_query(array(
-            'client_id'     => $this->getAppId(),
+            'client_id'     => $this->getClientId(),
             'scope'         => implode(',', $this->getScope()),
             'redirect_uri'  => $this->getRedirectUri(),
             'response_type' => $this->getResponceType(),
-            'v'             => self::VERSION,
+            'v'             => self::API_VERSION,
         ));
     }
     
@@ -113,8 +116,8 @@ class Vkontakte
         }
             
         $url = 'https://oauth.vk.com/access_token?' . http_build_query(array(
-            'client_id'     => $this->getAppId(),
-            'client_secret' => $this->getSecretKey(),
+            'client_id'     => $this->getClientId(),
+            'client_secret' => $this->getClientSecret(),
             'code'          => $code,
             'redirect_uri'  => $this->getRedirectUri(),
         ));
@@ -165,49 +168,49 @@ class Vkontakte
     }
     
     /**
-     * Set the application id
-     * @param string $appId
+     * Set the client ID (app ID)
+     * @param string $clientId
      * 
      * @return $this
      */
-    public function setAppId($appId)
+    public function setClientId($clientId)
     {
-        $this->appId = $appId;
+        $this->clientId = $clientId;
         
         return $this;
     }
     
     /**
-     * Get the application id
+     * Get the client ID (app ID)
      * 
      * @return string
      */
-    public function getAppId()
+    public function getClientId()
     {
-        return $this->appId;
+        return $this->clientId;
     }
     
     /**
-     * Set the application secret key
-     * @param string $secretKey
+     * Set the client secret key
+     * @param string $clientSecret
      * 
      * @return $this
      */
-    public function setSecretKey($secretKey)
+    public function setClientSecret($clientSecret)
     {
-        $this->secretKey = $secretKey;
+        $this->clientSecret = $clientSecret;
         
         return $this;
     }
     
     /**
-     * Get the application secret key
+     * Get the client secret key
      * 
      * @return string
      */
-    public function getSecretKey()
+    public function getClientSecret()
     {
-        return $this->secretKey;
+        return $this->clientSecret;
     }
     
     /**
