@@ -46,7 +46,7 @@ class Vkontakte
     
     /**
      * The current access token
-     * @var \StdClass
+     * @var array
      */
     private $accessToken;
     
@@ -78,11 +78,11 @@ class Vkontakte
     /**
      * Get the user id of current access token
      * 
-     * @return string
+     * @return string|null
      */
     public function getUserId()
     {
-        return $this->accessToken ? $this->accessToken->user_id : null;
+        return isset($this->accessToken['user_id']) ? $this->accessToken['user_id'] : null;
     }
     
     /**
@@ -123,11 +123,10 @@ class Vkontakte
         ));
 
         $token = $this->curl($url);
-        $data = json_decode($token);
-        $data->created = time(); // add access token created unix timestamp to object
-        $token = json_encode($data);
+        $decodedToken = json_decode($token, true);
+        $decodedToken['created'] = time(); // add access token created unix timestamp to array
         
-        $this->setAccessToken($token);
+        $this->setAccessToken($decodedToken);
 
         return $this;
     }
@@ -135,7 +134,7 @@ class Vkontakte
     /**
      * Make an API call to https://api.vk.com/method/
      * 
-     * @return string The response, decoded from json format
+     * @return mixed The response
      */
     public function api($method, array $query = array())
     {
@@ -146,12 +145,14 @@ class Vkontakte
                 $query[$param] = implode(',', $value);
             }
         }
-        $query['access_token'] = $this->accessToken->access_token;
+        $query['access_token'] = isset($this->accessToken['access_token'])
+            ? $this->accessToken['access_token'] 
+            : '';
         $url = 'https://api.vk.com/method/' . $method . '?' . http_build_query($query);
-        $result = json_decode($this->curl($url));
+        $result = json_decode($this->curl($url), true);
         
-        if (isset($result->response)) {
-            return $result->response;
+        if (isset($result['response'])) {
+            return $result['response'];
         }
         
         return $result;
@@ -164,7 +165,7 @@ class Vkontakte
      */
     public function isAccessTokenExpired()
     {
-        return time() > $this->accessToken->created + $this->accessToken->expires_in;
+        return time() > $this->accessToken['created'] + $this->accessToken['expires_in'];
     }
     
     /**
@@ -284,26 +285,29 @@ class Vkontakte
     
     /**
      * Set the access token
-     * @param string $token The access token in json format
+     * @param string|array $token The access token in json|array format
      * 
      * @return $this
      */
     public function setAccessToken($token)
     {
-        $this->accessToken = json_decode($token);
+        if (is_string($token)) {
+            $this->accessToken = json_decode($token, true);
+        } else {
+            $this->accessToken = (array)$token;
+        }
         
         return $this;
     }
     
     /**
      * Get the access token
-     * @param string $code
      * 
-     * @return string The access token in json format
+     * @return array|null The access token
      */
     public function getAccessToken()
     {
-        return json_encode($this->accessToken);
+        return $this->accessToken;
     }
     
     /**
