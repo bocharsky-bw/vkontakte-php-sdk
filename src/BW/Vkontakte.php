@@ -18,10 +18,10 @@ class Vkontakte
     private $appId;
     
     /**
-     * The application secret code
+     * The application secret key
      * @var string
      */
-    private $secret;
+    private $secretKey;
     
     /**
      * The scope for login URL
@@ -33,7 +33,7 @@ class Vkontakte
      * The URL to which the user will be redirected
      * @var string
      */
-    private $redirect_uri;
+    private $redirectUri;
     
     /**
      * The response type of login URL
@@ -57,8 +57,8 @@ class Vkontakte
         if (isset($config['app_id'])) {
             $this->setAppId($config['app_id']);
         }
-        if (isset($config['secret'])) {
-            $this->setSecret($config['secret']);
+        if (isset($config['secret_key'])) {
+            $this->setSecretKey($config['secret_key']);
         }
         if (isset($config['scopes'])) {
             $this->setScope($config['scopes']);
@@ -107,13 +107,13 @@ class Vkontakte
     
     /**
      * Set the application secret key
-     * @param string $secret
+     * @param string $secretKey
      * 
      * @return $this
      */
-    public function setSecret($secret)
+    public function setSecretKey($secretKey)
     {
-        $this->secret = $secret;
+        $this->secretKey = $secretKey;
         
         return $this;
     }
@@ -123,9 +123,9 @@ class Vkontakte
      * 
      * @return string
      */
-    public function getSecret()
+    public function getSecretKey()
     {
-        return $this->secret;
+        return $this->secretKey;
     }
     
     /**
@@ -153,13 +153,13 @@ class Vkontakte
     
     /**
      * Set the URL to which the user will be redirected
-     * @param string $redirect_uri
+     * @param string $redirectUri
      * 
      * @return $this
      */
-    public function setRedirectUri($redirect_uri)
+    public function setRedirectUri($redirectUri)
     {
-        $this->redirect_uri = $redirect_uri;
+        $this->redirectUri = $redirectUri;
         
         return $this;
     }
@@ -171,7 +171,7 @@ class Vkontakte
      */
     public function getRedirectUri()
     {
-        return $this->redirect_uri;
+        return $this->redirectUri;
     }
     
     /**
@@ -238,7 +238,7 @@ class Vkontakte
         
         $url = 'https://oauth.vk.com/access_token'
             .'?client_id='. urlencode($this->getAppId())
-            .'&client_secret='. urlencode($this->getSecret())
+            .'&client_secret='. urlencode($this->getSecretKey())
             .'&code='. urlencode($code)
             .'&redirect_uri='. urlencode($this->getRedirectUri());
 
