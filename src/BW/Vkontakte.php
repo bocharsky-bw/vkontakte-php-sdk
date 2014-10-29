@@ -82,7 +82,7 @@ class Vkontakte
      */
     public function getUserId()
     {
-        return $this->accessToken->user_id;
+        return $this->accessToken ? $this->accessToken->user_id : null;
     }
     
     /**
