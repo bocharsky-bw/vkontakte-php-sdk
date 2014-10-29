@@ -83,18 +83,19 @@ class Vkontakte
     }
     
     /**
-     * Get the login URL via Vkontakte
+     * Get the login URL for Vkontakte sign in
      * 
      * @return string
      */
     public function getLoginUrl()
     {
-        return 'https://oauth.vk.com/authorize'
-            .'?client_id='. urlencode($this->getAppId())
-            .'&scope='. urlencode(implode(',', $this->getScope()))
-            .'&redirect_uri='. urlencode($this->getRedirectUri())
-            .'&response_type='. urlencode($this->getResponceType())
-            .'&v='. urlencode(self::VERSION);
+        return 'https://oauth.vk.com/authorize?' . http_build_query(array(
+            'client_id'     => $this->getAppId(),
+            'scope'         => implode(',', $this->getScope()),
+            'redirect_uri'  => $this->getRedirectUri(),
+            'response_type' => $this->getResponceType(),
+            'v'             => self::VERSION,
+        ));
     }
     
     /**
@@ -110,16 +111,17 @@ class Vkontakte
                 $code = $_GET['code'];
             }
         }
-        
-        $url = 'https://oauth.vk.com/access_token'
-            .'?client_id='. urlencode($this->getAppId())
-            .'&client_secret='. urlencode($this->getSecretKey())
-            .'&code='. urlencode($code)
-            .'&redirect_uri='. urlencode($this->getRedirectUri());
+            
+        $url = 'https://oauth.vk.com/access_token?' . http_build_query(array(
+            'client_id'     => $this->getAppId(),
+            'client_secret' => $this->getSecretKey(),
+            'code'          => $code,
+            'redirect_uri'  => $this->getRedirectUri(),
+        ));
 
         $token = $this->curl($url);
         $data = json_decode($token);
-        $data->created = time(); // add access token created unix timestamp
+        $data->created = time(); // add access token created unix timestamp to object
         $token = json_encode($data);
         
         $this->setAccessToken($token);
@@ -137,6 +139,7 @@ class Vkontakte
         /* Generate query string from array */
         foreach ($query as $param => $value) {
             if (is_array($value)) {
+                // implode values of each nested array with comma
                 $query[$param] = implode(',', $value);
             }
         }
