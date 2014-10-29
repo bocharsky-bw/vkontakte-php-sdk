@@ -17,7 +17,7 @@ Include
 Require `composer` autoloader in your index file
 
 ```php
-require 'path/to/vendor/autoload.php';
+require __DIR__ . '/path/to/vendor/autoload.php';
 ```
 
 Create instance of `Vkontakte` class with your own configuration parameters
