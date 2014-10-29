@@ -8,7 +8,7 @@
     "authors": [
         {
             "name": "Bocharsky Victor",
-            "homepage": "https://github.com/bocharsky-bw/vkontakte-php-sdk/contributors"
+            "homepage": "https://github.com/bocharsky-bw"
         }
     ],
     "require": {
@@ -17,6 +17,6 @@
         "ext-json": "*"
     },
     "autoload": {
-        "classmap": ["src/"]
+        "psr-0": { "": "src/" }
     }
 }
