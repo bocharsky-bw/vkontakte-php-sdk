@@ -12,7 +12,7 @@ class Vkontakte
     /**
      * The API version used in queries
      */
-    const API_VERSION = '5.25';
+    const API_VERSION = '5.26';
 
     /**
      * The client ID (app ID)
