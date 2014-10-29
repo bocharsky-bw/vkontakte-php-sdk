@@ -83,6 +83,85 @@ class Vkontakte
     }
     
     /**
+     * Get the login URL via Vkontakte
+     * 
+     * @return string
+     */
+    public function getLoginUrl()
+    {
+        return 'https://oauth.vk.com/authorize'
+            .'?client_id='. urlencode($this->getAppId())
+            .'&scope='. urlencode(implode(',', $this->getScope()))
+            .'&redirect_uri='. urlencode($this->getRedirectUri())
+            .'&response_type='. urlencode($this->getResponceType())
+            .'&v='. urlencode(self::VERSION);
+    }
+    
+    /**
+     * Authenticate user and get access token from server
+     * @param string $code
+     * 
+     * @return $this
+     */
+    public function authenticate($code = null)
+    {
+        if (null === $code) {
+            if (isset($_GET['code'])) {
+                $code = $_GET['code'];
+            }
+        }
+        
+        $url = 'https://oauth.vk.com/access_token'
+            .'?client_id='. urlencode($this->getAppId())
+            .'&client_secret='. urlencode($this->getSecretKey())
+            .'&code='. urlencode($code)
+            .'&redirect_uri='. urlencode($this->getRedirectUri());
+
+        $token = $this->curl($url);
+        $data = json_decode($token);
+        $data->created = time(); // add access token created unix timestamp
+        $token = json_encode($data);
+        
+        $this->setAccessToken($token);
+
+        return $this;
+    }
+    
+    /**
+     * Make an API call to https://api.vk.com/method/
+     * 
+     * @return string The response, decoded from json format
+     */
+    public function api($method, array $query = array())
+    {
+        /* Generate query string from array */
+        foreach ($query as $param => $value) {
+            if (is_array($value)) {
+                $query[$param] = implode(',', $value);
+            }
+        }
+        $query['access_token'] = $this->accessToken->access_token;
+        $url = 'https://api.vk.com/method/' . $method . '?' . http_build_query($query);
+        $result = json_decode($this->curl($url));
+        
+        if (isset($result->response)) {
+            return $result->response;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Check is access token expired
+     * 
+     * @return boolean
+     */
+    public function isAccessTokenExpired()
+    {
+        return time() > $this->accessToken->created + $this->accessToken->expires_in;
+    }
+    
+    /**
      * Set the application id
      * @param string $appId
      * 
@@ -198,61 +277,6 @@ class Vkontakte
     }
     
     /**
-     * Get the login URL via Vkontakte
-     * 
-     * @return string
-     */
-    public function getLoginUrl()
-    {
-        return 'https://oauth.vk.com/authorize'
-            .'?client_id='. urlencode($this->getAppId())
-            .'&scope='. urlencode(implode(',', $this->getScope()))
-            .'&redirect_uri='. urlencode($this->getRedirectUri())
-            .'&response_type='. urlencode($this->getResponceType())
-            .'&v='. urlencode(self::VERSION);
-    }
-    
-    /**
-     * Check is access token expired
-     * 
-     * @return boolean
-     */
-    public function isAccessTokenExpired()
-    {
-        return time() > $this->accessToken->created + $this->accessToken->expires_in;
-    }
-    
-    /**
-     * Authenticate user and get access token from server
-     * @param string $code
-     * 
-     * @return $this
-     */
-    public function authenticate($code = null)
-    {
-        if (null === $code) {
-            if (isset($_GET['code'])) {
-                $code = $_GET['code'];
-            }
-        }
-        
-        $url = 'https://oauth.vk.com/access_token'
-            .'?client_id='. urlencode($this->getAppId())
-            .'&client_secret='. urlencode($this->getSecretKey())
-            .'&code='. urlencode($code)
-            .'&redirect_uri='. urlencode($this->getRedirectUri());
-
-        $token = $this->curl($url);
-        $data = json_decode($token);
-        $data->created = time(); // add access token created unix timestamp
-        $token = json_encode($data);
-        
-        $this->setAccessToken($token);
-
-        return $this;
-    }
-    
-    /**
      * Set the access token
      * @param string $token The access token in json format
      * 
@@ -274,30 +298,6 @@ class Vkontakte
     public function getAccessToken()
     {
         return json_encode($this->accessToken);
-    }
-    
-    /**
-     * Make an API call to https://api.vk.com/method/
-     * 
-     * @return string The response, decoded from json format
-     */
-    public function api($method, array $query = array())
-    {
-        /* Generate query string from array */
-        foreach ($query as $param => $value) {
-            if (is_array($value)) {
-                $query[$param] = implode(',', $value);
-            }
-        }
-        $query['access_token'] = $this->accessToken->access_token;
-        $url = 'https://api.vk.com/method/' . $method . '?' . http_build_query($query);
-        $result = json_decode($this->curl($url));
-        
-        if (isset($result->response)) {
-            return $result->response;
-        }
-        
-        return $result;
     }
     
     /**
