@@ -45,6 +45,8 @@ Handle response, received from `oauth.vk.com` and store access token to session
 for restore it when page will be reload
 
 ```php
+session_start(); // start session if you don't
+
 if (isset($_GET['code'])) {
     $vk->authenticate();
     $_SESSION['access_token'] = $vk->getAccessToken();
