@@ -17,12 +17,16 @@ Include
 Require `composer` autoloader in your index file
 
 ```php
+<?php
+
 require __DIR__ . '/path/to/vendor/autoload.php';
 ```
 
 Create instance of `Vkontakte` class with your own configuration parameters
 
 ```php
+<?php
+
 use \BW\Vkontakte as Vk;
 
 $vk = new Vk([
@@ -45,6 +49,8 @@ Handle response, received from `oauth.vk.com` and store access token to session
 for restore it when page will be reload
 
 ```php
+<?php
+
 session_start(); // start session if you don't
 
 if (isset($_GET['code'])) {
@@ -61,6 +67,8 @@ if (isset($_GET['code'])) {
 Get the authorized user ID
 
 ```php
+<?php
+
 $userId = $vk->getUserId();
 
 var_dump($userId);
@@ -70,6 +78,8 @@ Calling API
 -----------
 
 ```php
+<?php
+
 $users = $vk->api('users.get', [
     'user_id' => '1',
     'fields' => [
