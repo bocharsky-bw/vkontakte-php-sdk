@@ -1,7 +1,7 @@
 {
     "name": "bocharsky-bw/vkontakte-php-sdk",
     "description": "Vkontakte PHP SDK",
-    "keywords": ["vkontakte", "sdk"],
+    "keywords": ["vkontakte", "vk", "sdk", "php", "api", "oauth"],
     "type": "library",
     "homepage": "https://github.com/bocharsky-bw/vkontakte-php-sdk",
     "license": "MIT",
