@@ -11,6 +11,8 @@ class Vkontakte
 {
     /**
      * The API version used in queries
+     * 
+     * @link https://vk.com/dev/versions API version list
      */
     const API_VERSION = '5.27';
 
