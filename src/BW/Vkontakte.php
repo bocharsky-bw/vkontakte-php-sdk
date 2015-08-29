@@ -14,7 +14,7 @@ class Vkontakte
      * 
      * @link https://vk.com/dev/versions API version list
      */
-    const API_VERSION = '5.27';
+    private $apiVersion = '5.37';
 
     /**
      * The client ID (app ID)
@@ -59,6 +59,9 @@ class Vkontakte
      */
     public function __construct(array $config = array())
     {
+        if (isset($config['api_version'])) {
+            $this->setApiVersion($config['api_version']);
+        }
         if (isset($config['client_id'])) {
             $this->setClientId($config['client_id']);
         }
@@ -99,7 +102,7 @@ class Vkontakte
             'scope'         => implode(',', $this->getScope()),
             'redirect_uri'  => $this->getRedirectUri(),
             'response_type' => $this->getResponceType(),
-            'v'             => self::API_VERSION,
+            'v'             => $this->apiVersion,
         ));
     }
     
@@ -136,7 +139,10 @@ class Vkontakte
     /**
      * Make an API call to https://api.vk.com/method/
      * 
+     * @param string $method API method name
+     * @param array $query API method params
      * @return mixed The response
+     * @throws \Exception
      */
     public function api($method, array $query = array())
     {
@@ -171,28 +177,51 @@ class Vkontakte
     }
     
     /**
-     * Set the client ID (app ID)
-     * @param string $clientId
+     * Set the API version
+     * @param string $apiVersion
      * 
      * @return $this
      */
-    public function setClientId($clientId)
+    public function setApiVersion($apiVersion)
     {
-        $this->clientId = $clientId;
+        $this->apiVersion = $apiVersion;
         
         return $this;
     }
     
     /**
-     * Get the client ID (app ID)
+     * Get the API version
      * 
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        return $this->apiVersion;
+    }
+
+    /**
+     * Set the client ID (app ID)
+     * @param string $clientId
+     *
+     * @return $this
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+
+        return $this;
+    }
+
+    /**
+     * Get the client ID (app ID)
+     *
      * @return string
      */
     public function getClientId()
     {
         return $this->clientId;
     }
-    
+
     /**
      * Set the client secret key
      * @param string $clientSecret
