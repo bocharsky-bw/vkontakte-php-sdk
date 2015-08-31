@@ -52,6 +52,17 @@ class Vkontakte
      */
     private $accessToken;
 
+    /**
+     * The type of connection
+     * @var array
+     */
+    private $persistentConnect = true;
+
+    /**
+     * The connection
+     * @var resource
+     */
+    static $connection;
 
     /**
      * The Vkontakte instance constructor for quick configuration
@@ -76,6 +87,9 @@ class Vkontakte
         }
         if (isset($config['response_type'])) {
             $this->setResponceType($config['response_type']);
+        }
+        if (isset($config['persistent_connect'])) {
+            $this->setPersistentConnect($config['persistent_connect']);
         }
     }
 
@@ -318,6 +332,29 @@ class Vkontakte
     }
 
     /**
+     * Set option enable for persistent connection
+     * @param boolean $enable
+     *
+     * @return $this
+     */
+    public function setPersistentConnect($enable)
+    {
+        $this->persistentConnect = (boolean)$enable;
+
+        return $this;
+    }
+
+    /**
+     * Get the status of type connection
+     *
+     * @return string
+     */
+    public function getPersistentConnect()
+    {
+        return $this->persistentConnect;
+    }
+
+    /**
      * Set the access token
      * @param string|array $token The access token in json|array format
      *
@@ -355,7 +392,14 @@ class Vkontakte
     protected function curl($url)
     {
         // create curl resource
-        $ch = curl_init();
+        if ($this->persistentConnect) {
+            if (!is_resource(static::$connection)) {
+                static::$connection = curl_init();
+            }
+            $ch = static::$connection;
+        } else {
+            $ch = curl_init();
+        }
 
         // set url
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -372,13 +416,22 @@ class Vkontakte
             $error = curl_error($ch);
         }
 
-        // close curl resource to free up system resources
-        curl_close($ch);
+        if (!$this->persistentConnect) {
+            // close curl resource to free up system resources
+            curl_close($ch);
+        }
 
         if (isset($errno) && isset($error)) {
             throw new \Exception($error, $errno);
         }
 
         return $result;
+    }
+
+    public function __destruct()
+    {
+        if (is_resource(static::$connection)) {
+            curl_close(static::$connection);
+        }
     }
 }
