@@ -56,7 +56,7 @@ class Vkontakte
      * The type of connection
      * @var boolean
      */
-    private $isPersistentConnect = true;
+    private $persistentConnect = true;
 
     /**
      * The connection
@@ -88,8 +88,8 @@ class Vkontakte
         if (isset($config['response_type'])) {
             $this->setResponceType($config['response_type']);
         }
-        if (isset($config['is_persistent_connect'])) {
-            $this->setIsPersistentConnect($config['is_persistent_connect']);
+        if (isset($config['persistent_connect'])) {
+            $this->setPersistentConnect($config['persistent_connect']);
         }
     }
 
@@ -346,21 +346,21 @@ class Vkontakte
      *
      * @return $this
      */
-    public function setIsPersistentConnect($enable)
+    public function setPersistentConnect($enable)
     {
-        $this->isPersistentConnect = (boolean)$enable;
+        $this->persistentConnect = (boolean)$enable;
 
         return $this;
     }
 
     /**
-     * Get the status of type connection
+     * Whether the status of type connection is persistent
      *
      * @return boolean
      */
-    public function getIsPersistentConnect()
+    public function isPersistentConnect()
     {
-        return $this->isPersistentConnect;
+        return $this->persistentConnect;
     }
 
     /**
@@ -401,7 +401,7 @@ class Vkontakte
     protected function curl($url)
     {
         // create curl resource
-        if ($this->isPersistentConnect) {
+        if ($this->persistentConnect) {
             if (!is_resource(static::$connection)) {
                 static::$connection = curl_init();
             }
@@ -425,7 +425,7 @@ class Vkontakte
             $error = curl_error($ch);
         }
 
-        if (!$this->isPersistentConnect) {
+        if (!$this->persistentConnect) {
             // close curl resource to free up system resources
             curl_close($ch);
         }
