@@ -5,7 +5,7 @@ namespace BW;
 /**
  * The Vkontakte PHP SDK
  *
- * @author Bocharsky Victor
+ * @author Victor Bocharsky <bocharsky.bw@gmail.com>
  */
 class Vkontakte
 {
@@ -18,54 +18,63 @@ class Vkontakte
 
     /**
      * The client ID (app ID)
+     *
      * @var string
      */
     private $clientId;
 
     /**
      * The client secret key
+     *
      * @var string
      */
     private $clientSecret;
 
     /**
      * The scope for login URL
+     *
      * @var array
      */
     private $scope = array();
 
     /**
      * The URL to which the user will be redirected
+     *
      * @var string
      */
     private $redirectUri;
 
     /**
      * The response type of login URL
+     *
      * @var string
      */
     private $responceType = 'code';
 
     /**
      * The current access token
+     *
      * @var array
      */
     private $accessToken;
 
     /**
      * The type of connection
+     *
      * @var boolean
      */
     private $persistentConnect = true;
 
     /**
      * The connection
+     *
      * @var resource
      */
     private static $connection;
 
     /**
      * The Vkontakte instance constructor for quick configuration
+     *
      * @param array $config
      */
     public function __construct(array $config = array())
@@ -131,6 +140,7 @@ class Vkontakte
 
     /**
      * Authenticate user and get access token from server
+     *
      * @param string $code
      *
      * @return $this
@@ -164,7 +174,9 @@ class Vkontakte
      *
      * @param string $method API method name
      * @param array $query API method params
+     *
      * @return mixed The response
+     *
      * @throws \Exception
      */
     public function api($method, array $query = array())
@@ -204,6 +216,7 @@ class Vkontakte
 
     /**
      * Set the API version
+     *
      * @param string $apiVersion
      *
      * @return $this
@@ -227,6 +240,7 @@ class Vkontakte
 
     /**
      * Set the client ID (app ID)
+     *
      * @param string $clientId
      *
      * @return $this
@@ -250,6 +264,7 @@ class Vkontakte
 
     /**
      * Set the client secret key
+     *
      * @param string $clientSecret
      *
      * @return $this
@@ -273,6 +288,7 @@ class Vkontakte
 
     /**
      * Set the scope for login URL
+     *
      * @param array $scope
      *
      * @return $this
@@ -296,6 +312,7 @@ class Vkontakte
 
     /**
      * Set the URL to which the user will be redirected
+     *
      * @param string $redirectUri
      *
      * @return $this
@@ -319,6 +336,7 @@ class Vkontakte
 
     /**
      * Set the response type of login URL
+     *
      * @param string $responceType
      *
      * @return $this
@@ -342,6 +360,7 @@ class Vkontakte
 
     /**
      * Set option enable for persistent connection
+     *
      * @param boolean $enable
      *
      * @return $this
@@ -365,6 +384,7 @@ class Vkontakte
 
     /**
      * Set the access token
+     *
      * @param string|array $token The access token in json|array format
      *
      * @return $this
@@ -392,6 +412,7 @@ class Vkontakte
 
     /**
      * Make the curl request to specified url
+     *
      * @param string $url The url for curl() function
      *
      * @return mixed The result of curl_exec() function
