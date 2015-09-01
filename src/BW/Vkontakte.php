@@ -52,6 +52,17 @@ class Vkontakte
      */
     private $accessToken;
 
+    /**
+     * The type of connection
+     * @var boolean
+     */
+    private $isPersistentConnect = true;
+
+    /**
+     * The connection
+     * @var resource
+     */
+    private static $connection;
 
     /**
      * The Vkontakte instance constructor for quick configuration
@@ -77,8 +88,20 @@ class Vkontakte
         if (isset($config['response_type'])) {
             $this->setResponceType($config['response_type']);
         }
+        if (isset($config['is_persistent_connect'])) {
+            $this->setIsPersistentConnect($config['is_persistent_connect']);
+        }
     }
 
+    /**
+     * Destruct method
+     */
+    public function __destruct()
+    {
+        if (is_resource(static::$connection)) {
+            curl_close(static::$connection);
+        }
+    }
 
     /**
      * Get the user id of current access token
@@ -318,6 +341,29 @@ class Vkontakte
     }
 
     /**
+     * Set option enable for persistent connection
+     * @param boolean $enable
+     *
+     * @return $this
+     */
+    public function setIsPersistentConnect($enable)
+    {
+        $this->isPersistentConnect = (boolean)$enable;
+
+        return $this;
+    }
+
+    /**
+     * Get the status of type connection
+     *
+     * @return boolean
+     */
+    public function getIsPersistentConnect()
+    {
+        return $this->isPersistentConnect;
+    }
+
+    /**
      * Set the access token
      * @param string|array $token The access token in json|array format
      *
@@ -355,7 +401,14 @@ class Vkontakte
     protected function curl($url)
     {
         // create curl resource
-        $ch = curl_init();
+        if ($this->isPersistentConnect) {
+            if (!is_resource(static::$connection)) {
+                static::$connection = curl_init();
+            }
+            $ch = static::$connection;
+        } else {
+            $ch = curl_init();
+        }
 
         // set url
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -372,8 +425,10 @@ class Vkontakte
             $error = curl_error($ch);
         }
 
-        // close curl resource to free up system resources
-        curl_close($ch);
+        if (!$this->isPersistentConnect) {
+            // close curl resource to free up system resources
+            curl_close($ch);
+        }
 
         if (isset($errno) && isset($error)) {
             throw new \Exception($error, $errno);
