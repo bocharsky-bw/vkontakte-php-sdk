@@ -64,7 +64,14 @@ class Vkontakte
      * @var boolean
      */
     private $persistentConnect = true;
-
+    
+    /**
+     * The state.
+     * This is a string, which Vk will do return, if we send it.
+     * @var string
+    */
+    private $state;
+    
     /**
      * The connection
      *
@@ -100,6 +107,9 @@ class Vkontakte
         if (isset($config['persistent_connect'])) {
             $this->setPersistentConnect($config['persistent_connect']);
         }
+        if (isset($config['state'])) {
+            $this->setState($config['state']);
+        }
     }
 
     /**
@@ -129,13 +139,16 @@ class Vkontakte
      */
     public function getLoginUrl()
     {
-        return 'https://oauth.vk.com/authorize?' . http_build_query(array(
+        $params = array(
             'client_id' => $this->getClientId(),
             'scope' => implode(',', $this->getScope()),
             'redirect_uri' => $this->getRedirectUri(),
             'response_type' => $this->getResponceType(),
             'v' => $this->apiVersion,
-        ));
+        );
+        if ($this->state)
+            $params['state'] = $this->state;
+        return 'https://oauth.vk.com/authorize?' . http_build_query($params));
     }
 
     /**
@@ -410,6 +423,30 @@ class Vkontakte
         return $this->accessToken;
     }
 
+    /**
+     * Set the state string 
+     * 
+     * @param string $state. Custom string for returning in response from Vkontakte.
+     * 
+     * @return $this
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+        
+        return $this;
+    }
+    
+    /**
+     * Get the state string
+     *
+     * @return string|null 
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+    
     /**
      * Make the curl request to specified url
      *
