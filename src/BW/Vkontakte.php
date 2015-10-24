@@ -148,7 +148,7 @@ class Vkontakte
         );
         if ($this->state)
             $params['state'] = $this->state;
-        return 'https://oauth.vk.com/authorize?' . http_build_query($params));
+        return 'https://oauth.vk.com/authorize?' . http_build_query($params);
     }
 
     /**
