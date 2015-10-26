@@ -64,14 +64,14 @@ class Vkontakte
      * @var boolean
      */
     private $persistentConnect = true;
-    
+
     /**
-     * The state.
-     * This is a string, which Vk will do return, if we send it.
+     * The custom string which VK will return back.
+     * 
      * @var string
     */
     private $state;
-    
+
     /**
      * The connection
      *
@@ -139,15 +139,25 @@ class Vkontakte
      */
     public function getLoginUrl()
     {
+        // required params
         $params = array(
             'client_id' => $this->getClientId(),
-            'scope' => implode(',', $this->getScope()),
             'redirect_uri' => $this->getRedirectUri(),
-            'response_type' => $this->getResponceType(),
-            'v' => $this->apiVersion,
         );
-        if ($this->state)
+        // optional params
+        if ($this->getScope()) {
+            $params['scope'] = implode(',', $this->getScope());
+        }
+        if ($this->getResponceType()) {
+            $params['response_type'] = $this->getResponceType();
+        }
+        if ($this->apiVersion) {
+            $params['v'] = $this->apiVersion;
+        }
+        if ($this->state) {
             $params['state'] = $this->state;
+        }
+
         return 'https://oauth.vk.com/authorize?' . http_build_query($params);
     }
 
