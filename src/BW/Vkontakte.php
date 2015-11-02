@@ -133,6 +133,16 @@ class Vkontakte
     }
 
     /**
+     * Get the user email of current access token. Email should be requested in scope first.
+     *
+     * @return string|null
+     */
+    public function getUserEmail()
+    {
+        return isset($this->accessToken['email']) ? $this->accessToken['email'] : null;
+    }
+
+    /**
      * Get the login URL for Vkontakte sign in
      *
      * @return string
