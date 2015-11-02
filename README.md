@@ -70,7 +70,7 @@ Calling API
 -----------
 
 ```php
-$users = $vk->api('users.get', [
+$user = $vk->api('users.get', [
     'user_id' => '1',
     'fields' => [
         'photo_50',
@@ -79,7 +79,7 @@ $users = $vk->api('users.get', [
     ],
 ]);
 
-print_r($users);
+var_dump($user);
 ```
 
 For more info read the official docs:
