@@ -80,6 +80,11 @@ class Vkontakte
     private static $connection;
 
     /**
+     * @var bool
+     */
+    private $isIPv6Disabled = false;
+
+    /**
      * The Vkontakte instance constructor for quick configuration
      *
      * @param array $config
@@ -109,6 +114,9 @@ class Vkontakte
         }
         if (isset($config['state'])) {
             $this->setState($config['state']);
+        }
+        if (isset($config['ipv6_disabled'])) {
+            $this->setIsIPv6Disabled($config['ipv6_disabled']);
         }
     }
 
@@ -466,6 +474,22 @@ class Vkontakte
     {
         return $this->state;
     }
+
+    /**
+     * @param bool $isIPv6Disabled
+     */
+    public function setIsIPv6Disabled($isIPv6Disabled)
+    {
+        $this->isIPv6Disabled = (bool) $isIPv6Disabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIPv6Disabled()
+    {
+        return $this->isIPv6Disabled;
+    }
     
     /**
      * Make the curl request to specified url
@@ -494,6 +518,10 @@ class Vkontakte
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         // disable SSL verifying
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        
+        if ($this->isIPv6Disabled) {
+            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        }
 
         // $output contains the output string
         $result = curl_exec($ch);
@@ -514,4 +542,5 @@ class Vkontakte
 
         return $result;
     }
+
 }
