@@ -1,5 +1,5 @@
 {
-    "name": "bocharsky-bw/vkontakte-php-sdk",
+    "name": "johndoejdg/vkontakte-php-sdk",
     "description": "Vkontakte PHP SDK",
     "keywords": ["vkontakte", "vk", "sdk", "php", "api", "oauth"],
     "type": "library",
