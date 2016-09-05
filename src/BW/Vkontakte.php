@@ -220,7 +220,7 @@ class Vkontakte
      *
      * @throws \Exception
      */
-    public function api($method, array $query = array())
+    public function api($method, array $query = array(), bool $isPost = null)
     {
         /* Generate query string from array */
         foreach ($query as $param => $value) {
@@ -235,8 +235,14 @@ class Vkontakte
         if (empty($query['v'])) {
             $query['v'] = $this->getApiVersion();
         }
-        $url = 'https://api.vk.com/method/' . $method . '?' . http_build_query($query);
-        $result = json_decode($this->curl($url), true);
+
+        if ($isPost) {
+            $url = 'https://api.vk.com/method/' . $method;
+        } else {
+            $url = 'https://api.vk.com/method/' . $method . '?' . http_build_query($query);
+        }
+
+        $result = json_decode($this->curl($url, $query), true);
 
         if (isset($result['response'])) {
             return $result['response'];
@@ -502,7 +508,7 @@ class Vkontakte
      *
      * @throws \Exception
      */
-    protected function curl($url)
+    protected function curl($url, $data = null)
     {
         // create curl resource
         if ($this->persistentConnect) {
@@ -520,6 +526,10 @@ class Vkontakte
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         // disable SSL verifying
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        if ($data) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        }
         
         if ($this->IPv6Disabled) {
             curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
