@@ -15,7 +15,7 @@ $vk = new Vk([
 if (isset($_GET['code'])) {
     $vk->authenticate($_GET['code']);
     $_SESSION['access_token'] = $vk->getAccessToken();
-    header('Location: ' . $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+    header('Location: '.'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
     exit;
 } else {
     $accessToken = isset($_SESSION['access_token']) ? $_SESSION['access_token'] : null;
