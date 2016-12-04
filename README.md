@@ -12,13 +12,13 @@ $ composer require bocharsky-bw/vkontakte-php-sdk
 
 ## Include
 
-Require `composer` autoloader in your index file
+Require `composer` autoloader in your index file:
 
 ```php
 require __DIR__ . '/path/to/vendor/autoload.php';
 ```
 
-Create instance of `Vkontakte` class with your own configuration parameters
+Create instance of `Vkontakte` class with your own configuration parameters:
 
 ```php
 use \BW\Vkontakte as Vk;
@@ -32,14 +32,14 @@ $vk = new Vk([
 
 ## OAuth authorization
 
-Build authorization link in your template
+Build authorization link in your template:
 
 ```php
 <a href="<?= $vk->getLoginUrl() ?>">Authenticate</a>
 ```
 
 Handle response, received from `oauth.vk.com` and store access token to session
-for restore it when page will be reload
+for restore it when page will be reload:
 
 ```php
 session_start(); // start session if you don't
