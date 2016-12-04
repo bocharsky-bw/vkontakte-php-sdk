@@ -1,18 +1,16 @@
-vkontakte-php-sdk
-=================
+# VKontakte PHP SDK
 
-Simple Vkontakte PHP SDK
+A simple and lightweight PHP SDK library for VKontakte social network.
 
-Install
--------
+## Install
 
-Install library with `composer` dependency manager
+Install library with Composer dependency manager:
 
-- Add `"bocharsky-bw/vkontakte-php-sdk": "dev-master"` into the `require` section of your `composer.json` file
-- Run `$ composer.phar install`
+```bash
+$ composer require bocharsky-bw/vkontakte-php-sdk
+```
 
-Include
--------
+## Include
 
 Require `composer` autoloader in your index file
 
@@ -32,13 +30,12 @@ $vk = new Vk([
 ]);
 ```
 
-OAuth authorization
--------------------
+## OAuth authorization
 
 Build authorization link in your template
 
-```html
-<a href="<?php print $vk->getLoginUrl() ?>">Sign In</a>
+```php
+<a href="<?= $vk->getLoginUrl() ?>">Authenticate</a>
 ```
 
 Handle response, received from `oauth.vk.com` and store access token to session
@@ -48,38 +45,37 @@ for restore it when page will be reload
 session_start(); // start session if you don't
 
 if (isset($_GET['code'])) {
-    $vk->authenticate();
+    $vk->authenticate($_GET['code']);
     $_SESSION['access_token'] = $vk->getAccessToken();
-    header('Location: ' . $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+    header('Location: '.'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
     exit;
 } else {
-    $vk->setAccessToken($_SESSION['access_token']);
-    var_dump($_SESSION);
+    $accessToken = isset($_SESSION['access_token']) ? $_SESSION['access_token'] : null;
+    $vk->setAccessToken($accessToken);
+    var_dump($_SESSION['access_token']);
 }
 ```
 
-Get the authorized user ID
+### Get the authenticated user ID
 
 ```php
 $userId = $vk->getUserId();
-
 var_dump($userId);
 ```
 
-Calling API
------------
+## Calling API
 
 ```php
-$user = $vk->api('users.get', [
-    'user_id' => '1',
+/** @var array[] $users */
+$users = $vk->api('users.get', [
+    'user_id' => 1,
     'fields' => [
         'photo_50',
         'city',
         'sex',
     ],
 ]);
-
-var_dump($user);
+var_dump($users);
 ```
 
 For more info read the official docs:

@@ -25,8 +25,9 @@ if (isset($_GET['code'])) {
 $userId = $vk->getUserId();
 var_dump($userId);
 
+/** @var array[] $users */
 $users = $vk->api('users.get', [
-    'user_id' => '1',
+    'user_id' => 1,
     'fields' => [
         'photo_50',
         'city',
